@@ -1,11 +1,13 @@
-![128x128](https://user-images.githubusercontent.com/70780576/198192975-0566f616-64e9-49d2-ae14-74e4e7bb0574.png)
+<img width="221" alt="osc for wled" src="https://user-images.githubusercontent.com/70780576/209650812-d1d315dc-fc59-43d2-9ff8-b61f519fdd6e.png">
 
-# WebsocketOSC
-Send and Recieve OSC via Websockets
+# OSC for WLED
+Convert OSC Messages to the WLED JSON API
 
-### [Download Here](https://github.com/jshea2/WebsocketOSC/releases)
+### [Download Here](https://github.com/jshea2/OSC-for-WLED/releases)
 
-<img width="421" alt="Screen Shot 2022-10-26 at 8 46 42 PM" src="https://user-images.githubusercontent.com/70780576/198193033-a9c5f42b-6dba-4a1d-b6f7-7d033230121e.png">
+<img width="621" alt="Screen Shot 2022-10-26 at 8 46 42 PM" src="https://user-images.githubusercontent.com/70780576/209651737-8d60f707-355d-4de1-8ffd-c61f069ed7d3.png">
+
+![Screenshot 2022-12-27 at 2 16 52 AM](https://user-images.githubusercontent.com/70780576/209651737-8d60f707-355d-4de1-8ffd-c61f069ed7d3.png)
 
 
 ## cables.gl example projects:
