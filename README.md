@@ -108,4 +108,4 @@ JSON Message to `192.168.99.64`:
 
 
 # Credits:
-Powered by npm [wled-client](https://github.com/pandrr/osc2ws](https://github.com/ShiftLimits/wled-client)
+Powered by npm [wled-client](https://github.com/ShiftLimits/wled-client)
