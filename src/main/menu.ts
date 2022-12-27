@@ -3,12 +3,20 @@ import {
   Menu,
   shell,
   BrowserWindow,
+  ipcMain,
   MenuItemConstructorOptions,
 } from 'electron';
+import path from 'path';
+import { resolveHtmlPath } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
   submenu?: DarwinMenuItemConstructorOptions[] | Menu;
+}
+
+if (process.env.NODE_ENV === 'production') {
+  const sourceMapSupport = require('source-map-support');
+  sourceMapSupport.install();
 }
 
 export default class MenuBuilder {

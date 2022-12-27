@@ -1,10 +1,4 @@
 {
   "iposc": "127.0.0.1",
-  "portosc": "3333",
-  "iposcout": "127.0.0.1",
-  "portoscout": "4444",
-  "ipwatchout": "127.0.0.1",
-  "portwatchout": "8001",
-  "oscinenabled": true,
-  "oscoutenabled": true
+  "portosc": "3333"
 }

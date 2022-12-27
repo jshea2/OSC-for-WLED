@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   sendConfig: (message) => ipcRenderer.invoke('config', message),
+  sendOscMessage: (message) => ipcRenderer.invoke('oscmessage', message),
   getConfig: () => ipcRenderer.invoke('configDefaults'),
   getIsRunOnce: () => ipcRenderer.invoke('isRunOnce'),
   console: (message) => ipcRenderer.invoke('consoleWindow', message),

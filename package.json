@@ -1,7 +1,7 @@
 {
-  "name": "WebsocketOSC",
+  "name": "OSCforWLED",
   "description": "A foundation for scalable desktop apps",
-  "version": "1.3.0",
+  "version": "1.0.0",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
@@ -31,7 +31,7 @@
     ]
   },
   "build": {
-    "productName": "WebsocketOSC",
+    "productName": "OSC for WLED",
     "appId": "org.erb.ElectronReact",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
@@ -95,12 +95,12 @@
     "publish": {
       "provider": "github",
       "owner": "jshea2",
-      "repo": "WebsocketOSC"
+      "repo": "OSC for WLED"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jshea2/WebsocketOSC.git"
+    "url": "git+https://github.com/jshea2/OSC for WLED.git"
   },
   "author": {
     "name": "Joe Shea"
@@ -244,6 +244,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1",
+    "wled-client": "^0.22.1",
     "ws": "^8.10.0",
     "yarn": "^1.22.19"
   },

@@ -21,6 +21,7 @@ let iposcout
 let portoscout
 let ipwatchout
 let portwatchout
+let osctest
 let oscinenabled
 let oscoutenabled
 let buttonConnected
@@ -31,6 +32,7 @@ const Hello = () => {
 
 let [oscIpIn, setOscIpIn] = useState("");
 let [oscPortIn, setOscPortIn] = useState("");
+let [osctest, setOscTest] = useState("/wled/[ip]/seg/fx,1");
 let [oscIpOut, setOscIpOut] = useState("");
 let [oscPortOut, setOscPortOut] = useState("");
 let [watchoutIpOut, setWatchoutIpOut] = useState("");
@@ -49,6 +51,7 @@ const [checke, setChecke] = React.useState("");
   const handleChang = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecke(event.target.checked);
   };
+  //osctest = "/wled/[ip]/seg/fx,4"
 
 // const openDev = () => {
 //   window.electron.console("Hi")
@@ -71,25 +74,25 @@ window.electron.ipcRenderer.on('woconnected', (event, arg) => {
   setConnected(buttonConnected = "error")
   setTextConnect(textConnected = "Disconnected")
   }
-  console.log(`OSC (In)\nIP: ${iposc} \nPort: ${portosc}\n\nOSC (Out)\nIP: ${iposcout} \nPort: ${portoscout}\n\nWebsocket (Out)\nIP: ${ipwatchout}\nPort: ${portwatchout}`)
+  console.log(`OSC (In)\nIP: ${iposc} \nPort: ${portosc}\n\n`)
 })
 
 const getConfigDefaults = async () => {
   const result = await electron.getConfig()
   iposc = result.iposc
   portosc = result.portosc
-  iposcout = result.iposcout
-  portoscout = result.portoscout
-  ipwatchout = result.ipwatchout
-  portwatchout = result.portwatchout
-  oscinenabled = result.oscinenabled
-  setChecked(oscinenabled)
-  oscoutenabled = result.oscoutenabled
-  setChecke(oscoutenabled)
+  // iposcout = result.iposcout
+  // portoscout = result.portoscout
+  // ipwatchout = result.ipwatchout
+  // portwatchout = result.portwatchout
+  // oscinenabled = result.oscinenabled
+  // setChecked(oscinenabled)
+  // oscoutenabled = result.oscoutenabled
+  // setChecke(oscoutenabled)
 
 
-  console.log(`[Version: ${packageJson.version}]`)
-  console.log(`[Last Used Config Settings]\n\nOSC (In)\nIP: ${iposc} \nPort: ${portosc}\n\nOSC (Out)\nIP: ${iposcout} \nPort: ${portoscout}\n\nWebsocket (Out)\nIP: ${ipwatchout}\nPort: ${portwatchout}`)
+  console.log(`[OSC for WLED Version: ${packageJson.version}]`)
+  console.log(`[Last Used Config Settings]\n\nOSC (In)\nIP: ${iposc} \nPort: ${portosc}\n\n`)
 
 
   let input = document.getElementById("input1")
@@ -98,21 +101,24 @@ const getConfigDefaults = async () => {
   let input2 = document.getElementById("input2")
   input2.value = portosc
 
-  let input5 = document.getElementById("input5")
-  input5.value = iposcout
+  // let input3 = document.getElementById("input3")
+  // input3.value = osctest
 
-  let input6 = document.getElementById("input6")
-  input6.value = portoscout
+  // let input5 = document.getElementById("input5")
+  // input5.value = iposcout
 
-  let input3 = document.getElementById("input3")
-  input3.value = ipwatchout
+  // let input6 = document.getElementById("input6")
+  // input6.value = portoscout
 
-  let input4 = document.getElementById("input4")
-  input4.value = portwatchout
+  // let input3 = document.getElementById("input3")
+  // input3.value = ipwatchout
 
-  oscinenabled = checked
+  // let input4 = document.getElementById("input4")
+  // input4.value = portwatchout
 
-  oscoutenabled = checke
+  // oscinenabled = checked
+
+  // oscoutenabled = checke
 
 
 }
@@ -137,16 +143,38 @@ const handleSubmit = async (e) => {
     return
   }
 
-  oscinenabled = checked
-  oscoutenabled = checke
-  setTextConnect(textConnected = "Connecting...")
-  const configData = {iposc, portosc, iposcout, portoscout, ipwatchout, portwatchout, oscinenabled, oscoutenabled}
+  // oscinenabled = checked
+  // oscoutenabled = checke
+  // setTextConnect(textConnected = "Connecting...")
+  const configData = {iposc, portosc}
   console.log("[OSC CONNECTED]\n[OSC SERVER RUNNING...]")
   //console.log(configData)
   const result = await window.electron.sendConfig(configData)
   //console.log(result)
 
 }
+
+const handleSubmitTest = async (e) => {
+  e.preventDefault()
+  //const result = await window.electron.sendConfig(configData)
+  // ipcRenderer.send('submitted', "yes")
+
+  let oscMessage = osctest.split(",")
+  console.log(`OSC TEST: ${oscMessage[0]}, ${oscMessage[1]}`)
+  //console.log("Send Button Pressed")
+
+
+  if (oscMessage == ""){
+    return
+    // ipcRenderer.send('oscMessage', oscMessage[0])
+  } else {
+      // ipcRenderer.send('oscMessage', oscMessage)
+      const result = await window.electron.sendOscMessage(oscMessage)
+  }
+}
+
+
+// const submitFormButton = document.querySelector("#ipcForm2");
 
 
 
@@ -166,9 +194,8 @@ const handleSubmit = async (e) => {
       />
       <div>
       <FormGroup>
-      <FormControlLabel control={<Checkbox checked={checked} onChange={handleChange}/>} label="OSC (IN)" />
       </FormGroup>
-      {/* <h2 className='App-header'>OSC (In)</h2> */}
+      <h2 className='App-header'>OSC (In)</h2>
 
       <TextField
       sx={{
@@ -205,83 +232,7 @@ const handleSubmit = async (e) => {
         />
 
 
-      <FormGroup>
-      <FormControlLabel control={<Checkbox checked={checke} onChange={handleChang}/>} label="OSC (OUT)"/>
-      </FormGroup>
 
-      <TextField
-      sx={{
-        input: { color: 'white'},
-        fieldSet: { borderColor: 'white'},
-        label: { color: 'white'}
-      }}
-      size="small"
-      margin="dense"
-        id="input5"
-        label="IP"w
-        defaultValue={oscIpOut}
-        onChange={(e) => setOscIpOut(
-          e.target.value,
-          iposcout = e.target.value,
-          //console.log(e)
-        )}
-        />
-      <TextField
-      sx={{
-        input: { color: 'white'},
-        fieldSet: { borderColor: 'white'},
-        label: { color: 'white'}
-      }}
-        id="input6"
-        size="small"
-        margin='dense'
-        label="Port"
-        defaultValue={oscPortOut}
-        onChange={(e) => setOscPortOut(
-          portoscout = e.target.value,
-          e.target.value
-          )}
-        />
-
-        <div>
-        {/* {SimpleAccordion() } */}
-        {RecipeReviewCard()}
-      </div>
-
-      <br></br>
-      <h2 className='App-header'>Websocket</h2>
-      <TextField
-      sx={{
-        input: { color: 'white'},
-        fieldSet: { borderColor: 'white'},
-        label: { color: 'white'}
-      }}
-        margin="dense"
-        id="input3"
-        label="IP"
-        size="small"
-        defaultValue={watchoutIpOut}
-        onChange={(e) => setWatchoutIpOut(
-          e.target.value,
-          ipwatchout = e.target.value
-          )}
-        />
-      <TextField
-      sx={{
-        input: { color: 'white'},
-        fieldSet: { borderColor: 'white'},
-        label: { color: 'white'}
-      }}
-        margin="dense"
-        id="input4"
-        label="Port"
-        size="small"
-        defaultValue={watchoutPortOut}
-        onChange={(e) => setWatchoutPortOut(
-          e.target.value,
-          portwatchout = e.target.value
-          )}
-      />
 
       <Button sx={{
         position:'absolute',
@@ -291,6 +242,48 @@ const handleSubmit = async (e) => {
         }} fullWidth variant='contained'color={buttonConnected} type='submit'>{textConnected}</Button>
       </div>
       </form>
+
+      <form onSubmit={
+        handleSubmitTest
+        }>
+          <h2 className='App-header'>OSC Tester</h2>
+
+<TextField
+sx={{
+  input: { color: 'white'},
+  fieldSet: { borderColor: 'white'},
+  label: { color: 'white'}
+}}
+size="small"
+margin="dense"
+  id="input3"
+  label="OSC Message"w
+  defaultValue={osctest}
+  onChange={(e) => setOscTest(
+    e.target.value,
+    osctest = e.target.value,
+    //console.log(e)
+  )}
+  />
+
+<Button sx={{
+
+        height:60
+        }}color={buttonConnected} type='submit'>Send</Button>
+
+</form>
+      {/* <form action="#" id="ipcForm2">
+        <br>
+        <span class="label2">OSC Tester</span>
+        <br>
+        <label for="oscaddress"></label>
+              <input type="text" id="oscaddress" value="/wled/[ip]/seg/fx" size="18">
+              </br>
+        <label for="oscarg"></label>
+            <input type="text" id="oscarg" value="7" size="18">
+        <input class="button" id="submit" type="submit" value="Send OSC">
+      </form> */}
+
     </div>
   )
 };

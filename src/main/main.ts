@@ -15,11 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const fs = require('fs')
-const { Client, Server } = require('node-osc');
-const express = require('express')
-const app2 = express()
-const server = require('http').createServer(app2)
-const WebSocket = require('ws')
+const { WLEDClient } = require('wled-client')
+const { Server } = require('node-osc');
 
 
 
@@ -66,8 +63,8 @@ if (process.env.NODE_ENV === 'production') {
 //     .catch(console.log);
 // };
 
-const windowWidth = 160;
-const windowHeight = 537;
+const windowWidth = 260;
+const windowHeight = 350;
 
 const createWindow = async () => {
   // if (isDevelopment) {
@@ -112,6 +109,7 @@ const createWindow = async () => {
     }
   });
 
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -131,12 +129,12 @@ const createWindow = async () => {
 
   let oscIpIn
   let oscPortIn
-  let oscIpOut
-  let oscPortOut
-  let watchoutIpOut
-  let watchoutPortOut
-  let oscInEnabled
-  let oscOutEnabled
+  // let oscIpOut
+  // let oscPortOut
+  // let watchoutIpOut
+  // let watchoutPortOut
+  // let oscInEnabled
+  // let oscOutEnabled
 
 
   // Log to Browser Console
@@ -159,12 +157,12 @@ const createWindow = async () => {
       const jsonData = JSON.parse(data)
       oscIpIn = jsonData.iposc
       oscPortIn = jsonData.portosc
-      oscIpOut = jsonData.iposcout
-      oscPortOut = jsonData.portoscout
-      watchoutIpOut = jsonData.ipwatchout
-      watchoutPortOut = jsonData.portwatchout
-      oscInEnabled = jsonData.oscinenabled
-      oscOutEnabled = jsonData.oscoutenabled
+      // oscIpOut = jsonData.iposcout
+      // oscPortOut = jsonData.portoscout
+      // watchoutIpOut = jsonData.ipwatchout
+      // watchoutPortOut = jsonData.portwatchout
+      // oscInEnabled = jsonData.oscinenabled
+      // oscOutEnabled = jsonData.oscoutenabled
       console.log(`i got the config file:`)
       console.log(jsonData)
       ipcMain.handle('configDefaults', async (_,message) => {
@@ -188,126 +186,231 @@ const createWindow = async () => {
   }
 
 
+  //Test OSC Message
+  ipcMain.handle('oscmessage', async (_, msg) => {
+    console.log(msg)
+    mainWindow.setSize((windowWidth*2+100),windowHeight)
+    mainWindow.webContents.openDevTools();
+    let oscArray = msg[0].split('/');
+
+
+    if (msg[0].includes("/wled") && msg[0].includes("/info")){
+      async function init() {
+          const wled = new WLEDClient(`${oscArray[2]}`)
+          await wled.init()
+          //console.log(wled.info)
+
+          await logEverywhere(`WLED DEVICE INFO:\n\n${JSON.stringify(wled.info)}`)
+          await logEverywhere(`WLED DEVICE EFFECTS:\n\n${wled.effects}`)
+          await logEverywhere(`WLED DEVICE PALETTES:\n\n${wled.palettes}`)
+          await logEverywhere(`WLED DEVICE PRESETS:\n\n${JSON.stringify(wled.presets)}`)
+
+
+          //console.log(wled.state.brightness) // 255
+          wled.updateState({
+              segments: [{
+                  colors: [[msg[1],msg[2],msg[3]]]
+              }]
+          })
+          await console.log(wled.state) // 128
+          await console.log(wled.state.segments[0].colors)
+
+          wled.disconnect()
+      }
+      init().catch(console.error)
+      console.log(`True`);
+  }
+
+    if (msg[0].includes("/wled") && msg[0].includes("/rgb")){
+      async function init() {
+          const wled = new WLEDClient(`${oscArray[2]}`)
+          await wled.init()
+          //console.log(wled.info)
+          console.log(wled.effects)
+
+          //console.log(wled.state.brightness) // 255
+          wled.updateState({
+              segments: [{
+                  colors: [[msg[1],msg[2],msg[3]]]
+              }]
+          })
+          await console.log(wled.state) // 128
+          await console.log(wled.state.segments[0].colors)
+
+          wled.disconnect()
+      }
+      init().catch(console.error)
+      console.log(`True`);
+  }
+
+
+
+  if (oscArray.length === 4){
+      if (msg[0].includes("/wled")){
+          async function init() {
+              const wled = new WLEDClient(`${oscArray[2]}`)
+              await wled.init()
+
+              //console.log(wled.state.brightness) // 255
+              wled.updateState({
+                  [oscArray[3]]: msg[1]
+              })
+              await console.log(wled.state) // 128
+              wled.disconnect()
+          }
+          init().catch(console.error)
+          console.log(`True`);
+      }
+  }
+
+  if (oscArray.length === 5){
+
+      if (msg[0].includes("/wled")){
+          async function init() {
+              const wled = new WLEDClient(`${oscArray[2]}`)
+              await wled.init()
+
+              //console.log(wled.state.brightness) // 255
+              wled.updateState({
+                  [oscArray[3]]: {
+                      [oscArray[4]]: msg[1]
+                  }
+              })
+              await console.log(wled.state) // 128
+              await console.log(wled.state.segments[0].colors)
+
+              wled.disconnect()
+          }
+          init().catch(console.error)
+          console.log(`True`);
+      }
+  }
+  })
+
   //Submit and Config Handle
   ipcMain.handle('config', async (_, message) => {
-    if(message.portwatchout == 8000){
-      mainWindow.setSize((windowWidth*2+100),windowHeight)
-      mainWindow.webContents.openDevTools();
-      logEverywhere("Websocket Port ERROR: This app is already using port 8000")
-      logEverywhere("Please choose a different Port number")
-      mainWindow.webContents.send("woconnected", false)
-      return
-    }
+    mainWindow.webContents.send("woconnected", true)
     console.log(message)
     saveData(message)
     oscIpIn = message.iposc
     oscPortIn = message.portosc
-    oscIpOut = message.iposcout
-    oscPortOut = message.portoscout
-    watchoutIpOut = message.ipwatchout
-    watchoutPortOut = message.portwatchout
-    oscInEnabled = message.oscinenabled
-    oscOutEnabled = message.oscoutenabled
     mainWindow.setSize((windowWidth*2+100),windowHeight)
     mainWindow.webContents.openDevTools();
     //logEverywhere("")
 
 
-    // WEBSOCKET and EXPRESS
-    const wss = new WebSocket.Server({server:server})
-    const ws = new WebSocket(`ws://${watchoutIpOut}:${watchoutPortOut}`, {
-      perMessageDeflate: false
-    });
-
-
-    wss.on('connection', function connection(ws) {
-      logEverywhere(`New Connection`)
-      console.log("connected to server")
-      mainWindow.webContents.send("woconnected", true)
-
-      if (oscInEnabled){
-        oscServer.on('message', function (msg) {
-
-          console.log(`OSC Message: ${msg}`)
-          logEverywhere(`OSC Message: ${msg}`)
-          // let obj = {
-          //   v:[msg[1]],
-          //   a: msg[0]
-          // }
-          ws.send(JSON.stringify(msg));
-        })
-
-        oscServer.on('bundle', function (bundle) {
-          console.log(bundle)
-          ws.send(JSON.stringify(bundle));
-          bundle.elements.forEach((element, i) => {
-            // console.log(`Timestamp: ${bundle.timetag[i]}`);
-            logEverywhere(`Bundle OSC Message: ${element}`);
-          });
-          //oscServer.close();
-        });
-      }
-
-      if (oscOutEnabled){
-        ws.on('message', function message(data) {
-          console.log("This is the Websocket Data:")
-          console.log(data.toString());
-          let wsoscmessage = JSON.parse(data.toString())
-          //oscClient.send(wsoscmessage.a, wsoscmessage.v)
-          console.log(wsoscmessage)
-          oscClient.send(wsoscmessage)
-        });
-      }
-
-
-      ws.on('message', function message(data) {
-        wss.clients.forEach(client => {
-          client.send(data.toString())
-        })
-        logEverywhere(`Websocket Data: `)
-        logEverywhere(data.toString())
-      })
-
-      //ws.close()
-
-    })
-
-    app2.get('/', (req,res) => res.send("Hello World!"))
-
-    server.listen(watchoutPortOut, () => {
-      console.log(`Listening on port :${watchoutPortOut}`)
-      logEverywhere(`Websocket Connected on Port :${watchoutPortOut}`)
-    })
-
-
-
-
-
-
-
-    if (oscInEnabled){
-          //Connect OSC
     var oscServer = new Server(oscPortIn, oscIpIn, () => {
       console.log('OSC Server is listening');
-      console.log(`OSC IP: ${oscIpIn}\n OSC Port: ${oscPortIn}`)
+    });
+
+    oscServer.on('message', function (msg) {
+      logEverywhere(`OSC IN: ${msg}`)
+        let oscArray = msg[0].split('/');
+        console.log(oscArray)
+
+        if (msg[0].includes("/wled") && msg[0].includes("/info")){
+          async function init() {
+              const wled = new WLEDClient(`${oscArray[2]}`)
+              await wled.init()
+              //console.log(wled.info)
+
+              await logEverywhere(`WLED DEVICE INFO:\n\n${JSON.stringify(wled.info)}`)
+              await logEverywhere(`WLED DEVICE EFFECTS:\n\n${wled.effects}`)
+              await logEverywhere(`WLED DEVICE PALETTES:\n\n${wled.palettes}`)
+              await logEverywhere(`WLED DEVICE PRESETS:\n\n${JSON.stringify(wled.presets)}`)
+
+
+              //console.log(wled.state.brightness) // 255
+              wled.updateState({
+                  segments: [{
+                      colors: [[msg[1],msg[2],msg[3]]]
+                  }]
+              })
+              await console.log(wled.state) // 128
+              await console.log(wled.state.segments[0].colors)
+
+              wled.disconnect()
+          }
+          init().catch(console.error)
+          console.log(`True`);
+      }
+
+
+        if (msg[0].includes("/wled") && msg[0].includes("/rgb")){
+            async function init() {
+                const wled = new WLEDClient(`${oscArray[2]}`)
+                await wled.init()
+                //console.log(wled.info)
+                console.log(wled.effects)
+
+                //console.log(wled.state.brightness) // 255
+                wled.updateState({
+                    segments: [{
+                        colors: [[msg[1],msg[2],msg[3]]]
+                    }]
+                })
+                await console.log(wled.state) // 128
+                await console.log(wled.state.segments[0].colors)
+
+                wled.disconnect()
+            }
+            init().catch(console.error)
+            console.log(`True`);
+        }
+
+
+        if (oscArray.length === 4){
+            if (msg[0].includes("/wled")){
+                async function init() {
+                    const wled = new WLEDClient(`${oscArray[2]}`)
+                    await wled.init()
+
+                    //console.log(wled.state.brightness) // 255
+                    wled.updateState({
+                        [oscArray[3]]: msg[1]
+                    })
+                    await console.log(wled.state) // 128
+                    wled.disconnect()
+                }
+                init().catch(console.error)
+                console.log(`True`);
+            }
+        }
+
+        if (oscArray.length === 5){
+
+            if (msg[0].includes("/wled")){
+                async function init() {
+                    const wled = new WLEDClient(`${oscArray[2]}`)
+                    await wled.init()
+
+                    //console.log(wled.state.brightness) // 255
+                    wled.updateState({
+                        [oscArray[3]]: {
+                            [oscArray[4]]: msg[1]
+                        }
+                    })
+                    await console.log(wled.state) // 128
+                    await console.log(wled.state.segments[0].colors)
+
+                    wled.disconnect()
+                }
+                init().catch(console.error)
+                console.log(`True`);
+            }
+        }
+
 
     });
 
-    }
-
-    if (oscOutEnabled){
-      var oscClient = new Client(oscIpOut, oscPortOut, () => {
-        console.log('OSC Client is listening');
-        console.log(`OSC Out IP: ${oscIpOut}\n OSC Port: ${oscPortOut}`)
-      })
-    }
 
 
 
-    //
 
-    return
-  })
+
+
+
+    })
 
   ipcMain.handle('consoleWindow', async (_, message) => {
     console.log("I GOT THE ARROW THING")

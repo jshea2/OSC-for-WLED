@@ -1,5 +1,5 @@
 import { render } from 'react-dom';
-import App from './App';
+import Osc from './Osc';
 import './index.css';
 
 var windowTopBar = document.createElement('div')
@@ -13,6 +13,4 @@ document.body.style.borderRadius = "25px"
 // document.body.style.backgroundColor = "grey"
 document.body.style.color = "rgb(255,255,200)"
 
-render(<App />, document.getElementById('root'));
-
-//derp
+render(<Osc />, document.getElementById('root'));

@@ -1,6 +1,6 @@
 ![128x128](https://user-images.githubusercontent.com/70780576/198192975-0566f616-64e9-49d2-ae14-74e4e7bb0574.png)
 
-# WebsocketOSC
+# OSC for WLED
 Send and Recieve OSC via Websockets
 
 ### [Download Here](https://github.com/jshea2/WebsocketOSC/releases)

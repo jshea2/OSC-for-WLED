@@ -30,10 +30,10 @@
   min-height: 1vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   justify-content: center;
   font-size: calc(8px + 5vmin);
-  margin-top: 0%;
+  margin-top: 3%;
 }
 
 .App-link {
