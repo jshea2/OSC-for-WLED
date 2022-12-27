@@ -12,50 +12,74 @@ Convert OSC Messages to the WLED JSON API
 - Bundle OSC messages are NOT supported `(v1.0.0)`
 
 
+
 # OSC Commands:
 
 OSC Message Syntax:
+
 `/wled/[device-ip]/[state]` `[value]`
 
 Nested Segments Syntax:
+
 `/wled/[device-ip]/seg/[seg-state]` `[value]`
+
+
 
 Reference [JSON Key and Value Range API](https://github.com/Aircoookie/WLED-Docs/blob/main/docs/interfaces/json-api.md#state-object) for `state` and `value`
 
 ### Examples:
 
 **/on**
+
 `/wled/192.168.99.64/on` `true`
+
 - Toggles wled device on/off
 
 **/bri**
+
 `/wled/192.168.99.64/bri` `255`
+
 - Turn wled device brightness to full
 
 **/ps**
+
 `/wled/192.168.99.64/ps` `4`
+
 - Trigger preset 4 on wled device
+
+
 
 Reference [JSON Segment Key and Value Range API](https://github.com/Aircoookie/WLED-Docs/blob/main/docs/interfaces/json-api.md#contents-of-the-segment-object) for `seg-state` and `value`
 
 ### Examples:
 
 **/seg/sx**
+
 `/wled/192.168.99.64/seg/sx` `255`
+
 - Change relative effect speed slider to full on wled device
 
 **/seg/ix**
+
 `/wled/192.168.99.64/seg/ix` `128`
+
 - Change effect intensity slider to half on wled device
 
 **/seg/fx**
+
 `/wled/192.168.99.64/seg/fx` `7`
+
 - Trigger effect 7 on wled device
+
+
 
 ## Custom OSC Commands:
 
+
 **/rgb**
+
 `/wled/[device-ip]/rgb` `[red 0-255]` `[green 0-255]` `[blue 0-255]`
+
 - Set Color by RGB Values
 - example: `/wled/192.168.99.64/rgb` `255` `0` `128`
     - This changes the wled device to purple
@@ -64,6 +88,7 @@ Reference [JSON Segment Key and Value Range API](https://github.com/Aircoookie/W
 `/wled/[device-ip]/info`
 - Logs the wled devices info, effects, palettes, and presets to the dev console
 - example: `/wled/192.168.99.64/info`
+
 
 
 
