@@ -66,6 +66,10 @@ if (process.env.NODE_ENV === 'production') {
 const windowWidth = 260;
 const windowHeight = 350;
 
+// For PC
+// const windowWidth = 310;
+// const windowHeight = 380;
+
 const createWindow = async () => {
   // if (isDevelopment) {
   //   await installExtensions();
