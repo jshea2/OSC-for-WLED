@@ -1,7 +1,7 @@
 <img width="221" alt="osc for wled" src="https://user-images.githubusercontent.com/70780576/209650812-d1d315dc-fc59-43d2-9ff8-b61f519fdd6e.png">
 
-# WebsocketOSC
-Send and Recieve OSC via Websockets
+# OSC for WLED
+Convert OSC Commands to the WLED JSON API
 
 ### [Download Here](https://github.com/jshea2/OSC-for-WLED/releases)
 
@@ -108,4 +108,14 @@ JSON Message to `192.168.99.64`:
 
 
 # Credits:
-Powered by npm [wled-client](https://github.com/ShiftLimits/wled-client)
+Powered by npm [wled-client](https://github.com/ShiftLimits/wled-client) & [node-osc](https://github.com/MylesBorins/node-osc#readme)
+
+## Support The Project ❤️
+### If OSC for WLED helped you, consider helping the project by making a one time donation via **[PayPal](http://paypal.me/joeshea2)**
+
+#
+## Join the Discord Community
+
+<a href="https://discord.gg/FJ79AKPgSk">
+        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
+            alt="chat on Discord"></a>
