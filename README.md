@@ -10,6 +10,9 @@ Convert OSC Commands to the WLED JSON API
 ## Features:
 - Single OSC message supports muliple arguments `(v1.0.0)`
 - Bundle OSC messages are NOT supported `(v1.0.0)`
+- You can send OSC to different wled devices concurrently
+      - However, sending multiple OSC commands simultaneously to the same device is NOT recommended.
+                 - Try delaying OSC messages apart by 200ms
 
 
 
