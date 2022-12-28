@@ -7,6 +7,10 @@ Convert OSC Commands to the WLED JSON API
 
 ![Screenshot 2022-12-27 at 2 16 52 AM](https://user-images.githubusercontent.com/70780576/209651737-8d60f707-355d-4de1-8ffd-c61f069ed7d3.png)
 
+https://user-images.githubusercontent.com/70780576/209762257-64eecfb1-a250-4d26-8d42-9368ef17a3a3.mp4
+
+
+
 ## Features:
 - Single OSC message supports muliple arguments `(v1.0.0)`
 - Bundle OSC messages are NOT supported `(v1.0.0)`
