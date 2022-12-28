@@ -205,16 +205,6 @@ const createWindow = async () => {
           await logEverywhere(`WLED DEVICE PALETTES:\n\n${wled.palettes}`)
           await logEverywhere(`WLED DEVICE PRESETS:\n\n${JSON.stringify(wled.presets)}`)
 
-
-          //console.log(wled.state.brightness) // 255
-          wled.updateState({
-              segments: [{
-                  colors: [[msg[1],msg[2],msg[3]]]
-              }]
-          })
-          await console.log(wled.state) // 128
-          await console.log(wled.state.segments[0].colors)
-
           wled.disconnect()
       }
       init().catch(console.error)
@@ -229,11 +219,7 @@ const createWindow = async () => {
           console.log(wled.effects)
 
           //console.log(wled.state.brightness) // 255
-          wled.updateState({
-              segments: [{
-                  colors: [[msg[1],msg[2],msg[3]]]
-              }]
-          })
+          await wled.setColor([msg[1], msg[2], msg[3]])
           await console.log(wled.state) // 128
           await console.log(wled.state.segments[0].colors)
 
@@ -309,6 +295,7 @@ const createWindow = async () => {
         console.log(oscArray)
 
         if (msg[0].includes("/wled") && msg[0].includes("/info")){
+          console.log("/info triggered")
           async function init() {
               const wled = new WLEDClient(`${oscArray[2]}`)
               await wled.init()
@@ -319,54 +306,40 @@ const createWindow = async () => {
               await logEverywhere(`WLED DEVICE PALETTES:\n\n${wled.palettes}`)
               await logEverywhere(`WLED DEVICE PRESETS:\n\n${JSON.stringify(wled.presets)}`)
 
-
-              //console.log(wled.state.brightness) // 255
-              wled.updateState({
-                  segments: [{
-                      colors: [[msg[1],msg[2],msg[3]]]
-                  }]
-              })
-              await console.log(wled.state) // 128
-              await console.log(wled.state.segments[0].colors)
-
               wled.disconnect()
           }
           init().catch(console.error)
           console.log(`True`);
+          return
       }
 
 
         if (msg[0].includes("/wled") && msg[0].includes("/rgb")){
+          console.log("rgb triggered")
             async function init() {
                 const wled = new WLEDClient(`${oscArray[2]}`)
                 await wled.init()
                 //console.log(wled.info)
-                console.log(wled.effects)
 
-                //console.log(wled.state.brightness) // 255
-                wled.updateState({
-                    segments: [{
-                        colors: [[msg[1],msg[2],msg[3]]]
-                    }]
-                })
-                await console.log(wled.state) // 128
-                await console.log(wled.state.segments[0].colors)
+                await wled.setColor([msg[1], msg[2], msg[3]])
 
                 wled.disconnect()
             }
             init().catch(console.error)
             console.log(`True`);
+            return
         }
 
 
         if (oscArray.length === 4){
             if (msg[0].includes("/wled")){
+              console.log("4 length triggered")
                 async function init() {
                     const wled = new WLEDClient(`${oscArray[2]}`)
                     await wled.init()
 
                     //console.log(wled.state.brightness) // 255
-                    wled.updateState({
+                    await wled.updateState({
                         [oscArray[3]]: msg[1]
                     })
                     await console.log(wled.state) // 128
@@ -374,18 +347,20 @@ const createWindow = async () => {
                 }
                 init().catch(console.error)
                 console.log(`True`);
+                return
             }
         }
 
         if (oscArray.length === 5){
 
             if (msg[0].includes("/wled")){
+              console.log("5 length triggered")
                 async function init() {
                     const wled = new WLEDClient(`${oscArray[2]}`)
                     await wled.init()
 
                     //console.log(wled.state.brightness) // 255
-                    wled.updateState({
+                    await wled.updateState({
                         [oscArray[3]]: {
                             [oscArray[4]]: msg[1]
                         }
@@ -397,6 +372,7 @@ const createWindow = async () => {
                 }
                 init().catch(console.error)
                 console.log(`True`);
+                return
             }
         }
 
