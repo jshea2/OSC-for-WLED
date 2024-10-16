@@ -116,7 +116,7 @@ JSON Message to `192.168.99.64`:
 
 ![Screenshot 2024-10-15 at 5 28 12 PM](https://github.com/user-attachments/assets/d2b44557-0ee2-457a-968c-6e09ab3339ea)
 
-This TD project uses an OSC IN operator to listen to OSC and filter the OSC address if "/wled/1" then trigger a Web Client operator that has a HTTP GET Request to trigger the WLED's presets.
+This TouchDesigner project listens for OSC messages using an OSC IN operator. When the OSC message with the address /wled/1 is received, it triggers a Web Client operator, which sends an HTTP GET request to activate the presets on the WLED device.
 
 ### [Download Here](https://github.com/jshea2/OSC-for-WLED/releases)
 
